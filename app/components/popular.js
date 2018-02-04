@@ -1,11 +1,36 @@
 var React = require('react');
+var PropTypes = require('prop-types');
+
+function SelectLanguage (props) {
+	var languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
+	return (
+		<ul className='languages'>
+			{languages.map(function (lang) {
+				return (
+					<li 
+						style={lang === props.selectedLanguage ? {color: '#d0021b'} : null}
+						onClick={props.onSelect.bind(null, lang)}
+						key={lang}>
+						{lang}
+					</li>
+				)
+			})}
+		</ul>
+	)
+}
+
+
+SelectLanguage.propTypes = {
+	selectedLanguage: PropTypes.string.isRequired,
+	onSelect: PropTypes.func.isRequired,
+}
 
 class Popular extends React.Component {
 	// when calling constructor you should always pass props and call super passing props
 	constructor (props) { 
 		super(props);
 		this.state = { // this sets the state to all by default
-			selectedlanguage: 'All'
+			selectedLanguage: 'All'
 		};
 
 		// this line makes sure that the function updateLanguage is referencing the component (this references the component)
@@ -16,27 +41,17 @@ class Popular extends React.Component {
 	updateLanguage(lang) {
 		this.setState(function () { 
 			return {
-				selectedlanguage: lang
+				selectedLanguage: lang
 			}
 		})
 	} 
 	render() {
-		var languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
-		console.log('update language',this);
 		return (
-			<ul className='languages'>
-				{languages.map(function (lang) {
-					console.log('languages', this); // this is undefined because the function creates a new "this" context
-					return (
-						<li 
-							style={lang === this.state.selectedlanguage ? {color: '#d0021b'} : null}
-							onClick={this.updateLanguage.bind(null, lang)}
-							key={lang}>
-							{lang}
-						</li>
-					)
-				}, this)}
-			</ul>
+			<div>
+				<SelectLanguage
+					selectedLanguage={this.state.selectedLanguage}
+					onSelect={this.updateLanguage} />
+			</div>
 		)
 	}
 }
